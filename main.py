@@ -1,6 +1,17 @@
 import primes
 
-print(primes.is_prime(29))          # True
-print(primes.primes_up_to(30))      # [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-print(primes.primes_in_range(10, 50))  # [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
-print(primes.prime_factors(84))     # [2, 2, 3, 7]
+
+if __name__ == "__main__":
+    limit = 100
+
+    print("Простые числа методом простой проверки делением:")
+    print(primes.primes_basic(limit))
+
+    print("\nПростые числа методом Решета Эратосфена:")
+    print(primes.sieve_of_eratosthenes(limit))
+
+    print("\nПростые числа методом Решета Аткина:")
+    print(primes.sieve_of_atkin(limit))
+
+    print("\nПростые числа методом сегментированного Решета Эратосфена:")
+    print(primes.segmented_sieve(limit))
