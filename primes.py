@@ -55,43 +55,58 @@ def sieve_of_atkin(limit):
     return [2, 3] + [x for x in range(5, limit + 1) if sieve[x]]
 
 
-# Модифицированное Решето Эратосфена с сегментацией
-def segmented_sieve(limit):
-    """Модифицированное Решето Эратосфена с сегментацией."""
-    import math
+# Алгоритм Миллера-Рабина
+def miller_rabin(n, k=5):
+    """
+    Тест Миллера-Рабина для проверки простоты числа.
 
-    def simple_sieve(limit, primes):
-        sieve = [True] * (limit + 1)
-        for p in range(2, limit + 1):
-            if sieve[p]:
-                primes.append(p)
-                for i in range(p * p, limit + 1, p):
-                    sieve[i] = False
+    :param n: Число для проверки.
+    :param k: Количество раундов для повышения точности.
+    :return: True, если n вероятно простое, False, если составное.
+    """
+    import random
 
-    segment_size = int(math.sqrt(limit)) + 1
+    if n <= 1:
+        return False
+    if n == 2 or n == 3:
+        return True
+    if n % 2 == 0:
+        return False
+
+    # Разложение n-1 на вид (2^r) * d
+    r, d = 0, n - 1
+    while d % 2 == 0:
+        r += 1
+        d //= 2
+
+    # Основная проверка
+    for _ in range(k):
+        a = random.randint(2, n - 2)
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1:
+            continue
+
+        for _ in range(r - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+
+    return True
+
+
+def primes_miller_rabin(limit, k=5):
+    """
+    Нахождение всех простых чисел до limit с помощью теста Миллера-Рабина.
+
+    :param limit: Граница поиска простых чисел.
+    :param k: Количество раундов для повышения точности.
+    :return: Список вероятно простых чисел.
+    """
     primes = []
-    simple_sieve(segment_size, primes)
+    for num in range(2, limit + 1):
+        if miller_rabin(num, k):
+            primes.append(num)
+    return primes
 
-    low = segment_size
-    high = 2 * segment_size
-    prime_list = primes[:]
-
-    while low < limit:
-        if high >= limit:
-            high = limit + 1
-
-        sieve = [True] * (high - low)
-
-        for prime in primes:
-            low_lim = max(prime * prime, (low + prime - 1) // prime * prime)
-            for j in range(low_lim, high, prime):
-                sieve[j - low] = False
-
-        for i in range(low, high):
-            if sieve[i - low]:
-                prime_list.append(i)
-
-        low = low + segment_size
-        high = high + segment_size
-
-    return prime_list
