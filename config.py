@@ -1,7 +1,4 @@
-import tkinter as tk
-from tkinter import messagebox
-from algorithms.limit_primes_number import primes_basic, sieve_of_eratosthenes, sieve_of_atkin, primes_miller_rabin
-from algorithms.primes_single_number import is_prime_basic_single, sieve_of_eratosthenes_single, sieve_of_atkin_single, miller_rabin_single
+from algorithms import is_prime_basic, sieve_eratosthenes, sieve_atkin, miller_rabin
 
 
 def find_primes(entry_limit, algorithm_var, result_text):
@@ -9,52 +6,56 @@ def find_primes(entry_limit, algorithm_var, result_text):
     try:
         limit = int(entry_limit.get())
         if limit < 2:
-            messagebox.showerror("Ошибка", "Введите число больше 1.")
+            result_text.set("Введите число больше 1.")
             return
 
-        # Выбор алгоритма для поиска
+        # Выбор алгоритма для поиска простых чисел
         selected_algorithm = algorithm_var.get()
         if selected_algorithm == "Простая проверка":
-            result = primes_basic(limit)
+            primes = [i for i in range(2, limit + 1) if is_prime_basic(i)]
         elif selected_algorithm == "Решето Эратосфена":
-            result = sieve_of_eratosthenes(limit)
+            sieve = sieve_eratosthenes(limit)
+            primes = [i for i in range(2, limit + 1) if sieve[i]]
         elif selected_algorithm == "Решето Аткина":
-            result = sieve_of_atkin(limit)
+            sieve = sieve_atkin(limit)
+            primes = [i for i in range(2, limit + 1) if sieve[i]]
         elif selected_algorithm == "Тест Миллера-Рабина":
-            result = primes_miller_rabin(limit)
+            primes = [i for i in range(2, limit + 1) if miller_rabin(i)]
+        else:
+            result_text.set("Неизвестный алгоритм.")
+            return
 
-        # Вывод результата
-        result_text.delete(1.0, tk.END)
-        result_text.insert(tk.END, ", ".join(map(str, result)))
+        result_text.set(f"Простые числа до {limit}: {primes}")
 
     except ValueError:
-        messagebox.showerror("Ошибка", "Пожалуйста, введите корректное целое число.")
+        result_text.set("Введите корректное целое число.")
 
 
-def check_prime(entry_number, algorithm_var):
-    """Функция для проверки, является ли число простым."""
+def check_prime(entry_number, algorithm_var, result_text):
+    """Функция для проверки числа на простоту."""
     try:
         number = int(entry_number.get())
         if number < 2:
-            messagebox.showinfo("Результат", f"{number} не является простым числом.")
+            result_text.set("Введите число больше 1.")
             return
 
-        # Выбор алгоритма для проверки
+        # Выбор алгоритма для проверки числа
         selected_algorithm = algorithm_var.get()
         if selected_algorithm == "Простая проверка":
-            result = is_prime_basic_single(number)
+            is_prime = is_prime_basic(number)
         elif selected_algorithm == "Решето Эратосфена":
-            result = sieve_of_eratosthenes_single(number)
+            sieve = sieve_eratosthenes(number)
+            is_prime = sieve[number]
         elif selected_algorithm == "Решето Аткина":
-            result = sieve_of_atkin_single(number)
+            sieve = sieve_atkin(number)
+            is_prime = sieve[number]
         elif selected_algorithm == "Тест Миллера-Рабина":
-            result = miller_rabin_single(number)
-
-        # Отображение результата
-        if result:
-            messagebox.showinfo("Результат", f"{number} является простым числом.")
+            is_prime = miller_rabin(number)
         else:
-            messagebox.showinfo("Результат", f"{number} не является простым числом.")
+            result_text.set("Неизвестный алгоритм.")
+            return
+
+        result_text.set(f"{number} является простым: {is_prime}")
 
     except ValueError:
-        messagebox.showerror("Ошибка", "Пожалуйста, введите корректное целое число.")
+        result_text.set("Введите корректное целое число.")

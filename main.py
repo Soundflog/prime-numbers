@@ -37,18 +37,19 @@ def main():
                                         value="Тест Миллера-Рабина")
     radio_miller_rabin.pack()
 
+    # Поле для вывода результата
+    result_text = tk.StringVar()
+    result_label = tk.Label(root, textvariable=result_text, wraplength=400)
+    result_label.pack()
+
     # Кнопка для поиска простых чисел
     btn_find_primes = tk.Button(root, text="Найти простые числа",
                                 command=lambda: find_primes(entry_limit, algorithm_var, result_text))
     btn_find_primes.pack()
 
-    # Поле для вывода результата поиска простых чисел
-    result_text = tk.Text(root, height=10, width=50)
-    result_text.pack()
-
     # Кнопка для проверки числа на простоту
     btn_check_prime = tk.Button(root, text="Проверить число на простоту",
-                                command=lambda: check_prime(entry_number, algorithm_var))
+                                command=lambda: check_prime(entry_number, algorithm_var, result_text))
     btn_check_prime.pack()
 
     # Запуск главного цикла приложения
