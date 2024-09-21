@@ -55,7 +55,7 @@ def check_prime(entry_number, algorithm_var, result_text):
             result_text.set("Неизвестный алгоритм.")
             return
 
-        result_text.set(f"{number} является простым: {is_prime}")
+        result_text.set(f"число {number} {'простое число' if is_prime else 'не является простым'}")
 
     except ValueError:
         result_text.set("Введите корректное целое число.")
