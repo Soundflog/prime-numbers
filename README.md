@@ -40,6 +40,17 @@ pip install tkinter
 python main.py
 ```
 
+6. Для запуска RPC-сервера
+```bash
+python server.py
+```
+
+7. Запуск RPC-клиента
+```bash
+python client.py
+```
+
+
 ## Использование
 При запуске приложения откроется окно с графическим интерфейсом.
 
